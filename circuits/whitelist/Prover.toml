@@ -1,0 +1,7 @@
+merkle_path = ["0x1f32397e6e33c60fe739e91611f8a76e62074bb79ce0652a30a6044ec009815a", "0x0bf0c9182e9707877ff39ae6d1e386733d1051c23aeba7e03e071851af7e3514"]
+nullifier = "1"
+nullifier_hash = "0x2315ca586de863bea2bb990d9b35a0fd4f308c32e3aec35b70c29aac5a20b671"
+path_indices = ["0", "0"]
+recipient = "999"
+root = "0x019c5817ed87cfdc152bdf53122c6e3f7d335d290105f452b878102e37457cfc"
+secret = "10"

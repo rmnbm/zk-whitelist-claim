@@ -1,0 +1,12 @@
+# Node dependencies
+node_modules/
+package-lock.json
+
+# Noir compilation artifacts
+circuits/**/target/
+
+# Environment files
+.env
+
+# System files
+.DS_Store
