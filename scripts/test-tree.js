@@ -18,6 +18,11 @@ async function main() {
   console.log("Racine attendue : 0x019c5817ed87cfdc152bdf53122c6e3f7d335d290105f452b878102e37457cfc");
 
   await bb.destroy();
+
+  const { getMerklePath } = require("./merkle");
+  const { path, indices } = getMerklePath(levels, 0);
+  console.log("Path:", path.map(p => "0x" + p.toString(16)));
+  console.log("Indices:", indices);
 }
 
 main();

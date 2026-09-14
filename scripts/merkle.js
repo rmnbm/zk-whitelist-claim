@@ -20,4 +20,22 @@ async function buildTree(bb, leaves) {
   return levels;
 }
 
-module.exports = { hashPair, buildTree };
+function getMerklePath(levels, leafIndex) {
+  const path = [];
+  const indices = [];
+  let index = leafIndex;
+
+  for (let i = 0; i < levels.length - 1; i++) {
+    const currentLevel = levels[i];
+    const siblingIndex = index % 2 === 0 ? index + 1 : index - 1;
+    const sibling = currentLevel[siblingIndex];
+    path.push(sibling);
+    const direction = index % 2 === 0 ? 0 : 1;
+    indices.push(direction);
+    index = Math.floor(index / 2);
+  }
+
+  return { path, indices };
+}
+
+module.exports = { hashPair, buildTree, getMerklePath };
