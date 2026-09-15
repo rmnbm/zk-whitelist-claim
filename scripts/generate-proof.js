@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { Noir } = require("@noir-lang/noir_js");
-const { UltraHonkBackend } = require("@aztec/bb.js");
+const { UltraHonkBackend, splitHonkProof } = require("@aztec/bb.js");
 const { Barretenberg, Fr } = require("@aztec/bb.js");
 const { buildTree, getMerklePath } = require("./merkle");
 
@@ -48,12 +48,35 @@ async function main() {
   console.log("Witness successfully generated !");
 
   const backend = new UltraHonkBackend(circuit.bytecode);
-  const proof = await backend.generateProof(witness);
+  const proof = await backend.generateProof(witness, { keccak: true });
 
-  console.log("Proof generated ! Size :", proof.proof.length, "bytes");
+  const { publicInputs: accumulator, proof: proofBytes } = splitHonkProof(proof.proof, 16);
 
-  const isValid = await backend.verifyProof(proof);
+  const accumulatorFields = [];
+  for (let i = 0; i < 16; i++) {
+    const chunk = accumulator.slice(i * 32, (i + 1) * 32);
+    const hex = "0x" + Buffer.from(chunk).toString("hex").padStart(64, "0");
+    accumulatorFields.push(hex);
+  }
+
+  const fullPublicInputs = [...accumulatorFields, ...proof.publicInputs];
+
+  const isValid = await backend.verifyProof(proof, { keccak: true });
   console.log("Valid Proof :", isValid);
+
+
+  const output = {
+    proof: "0x" + Buffer.from(proofBytes).toString("hex"),
+    publicInputs: fullPublicInputs,
+    merkleRoot: "0x" + root.toString(16).padStart(64, "0"),
+  nullifierHash: "0x" + nullifierHash.toString(16).padStart(64, "0"),
+  };
+
+  fs.writeFileSync(
+    path.resolve(__dirname, "proof-data.json"),
+    JSON.stringify(output, null, 2)
+  );
+  console.log("Proof data saved to proof-data.json");
 
   await bb.destroy();
 }
