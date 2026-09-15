@@ -10,3 +10,9 @@ circuits/**/target/
 
 # System files
 .DS_Store
+
+# Foundry
+contracts/lib/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
