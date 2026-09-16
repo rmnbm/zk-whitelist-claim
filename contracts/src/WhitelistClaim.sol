@@ -18,7 +18,7 @@ contract WhitelistClaim {
     function claim(bytes32 nullifierHash, bytes calldata _proof , bytes32[] calldata _publicInputs) external{
         require(!claimedNullifiers[nullifierHash], "Nullifier already claimed.");
         require(verifier.verify(_proof, _publicInputs), "Invalid proof.");
-        bytes32 provenRecipient = _publicInputs[18];
+        bytes32 provenRecipient = _publicInputs[2];
         require(provenRecipient==bytes32(uint256(uint160(msg.sender))), "Proof not valid for this recipient");
         
         claimedNullifiers[nullifierHash] = true;
