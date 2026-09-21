@@ -1,6 +1,6 @@
 use std::hash::pedersen_hash;
 
-global DEPTH: u32 = 2;
+global DEPTH: u32 = 4;
 
 fn main(
     nullifier: Field,

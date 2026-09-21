@@ -11,12 +11,14 @@ async function main() {
   );
   const circuit = JSON.parse(fs.readFileSync(circuitPath, "utf8"));
   const bb = await Barretenberg.new();
-  const leaves = [
-    0x10bf67c31e011691ed3715360d8359cf5dd7a037252774ec25c286d71c93dca8n,
-    0x1f32397e6e33c60fe739e91611f8a76e62074bb79ce0652a30a6044ec009815an,
-    0x16fcd227e371b7b94689828854ae6e616b22da0b28dbc0b6d9b18f7281fb3b8an,
-    0x0edda9494d7d97380e2a9bc1682714c919245c66733026a4789e5ab7a10ea7fan,
-  ];
+  const NUM_MEMBERS = 16;
+  const leaves = [];
+  for (let i = 0; i < NUM_MEMBERS; i++) {
+    const nullifier = BigInt(i + 1);
+    const secret = BigInt((i + 1) * 10);
+    const leaf = await bb.pedersenHash([new Fr(nullifier), new Fr(secret)], 0);
+    leaves.push(BigInt(leaf.toString()));
+}
   const levels = await buildTree(bb, leaves);
   const root = levels[levels.length - 1][0];
   const { path: merklePath, indices } = getMerklePath(levels, 0);
