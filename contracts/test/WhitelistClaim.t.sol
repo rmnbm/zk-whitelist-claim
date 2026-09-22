@@ -27,4 +27,20 @@ contract WhitelistClaimTest is Test {
         vm.prank(address(uint160(999)));
         whitelistClaim.claim(nullifierHash, proof, publicInputs);
     }
+
+    function test_RevertWhen_NullifierAlreadyClaimed() public {
+    vm.prank(address(uint160(999)));
+    whitelistClaim.claim(nullifierHash, proof, publicInputs);
+
+    vm.prank(address(uint160(999)));
+    vm.expectRevert("Nullifier already claimed.");
+    whitelistClaim.claim(nullifierHash, proof, publicInputs);
+    }      
+
+    function test_RevertWhen_WrongRecipient() public {
+    vm.prank(address(uint160(100)));
+    vm.expectRevert("Proof not valid for this recipient");
+    whitelistClaim.claim(nullifierHash, proof, publicInputs);
+    }
+    
 }
